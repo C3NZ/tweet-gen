@@ -44,7 +44,8 @@ def fast_select(count):
     selected_words = []
 
     for i in range(0, count):
-        selected_word = linecache.getline("/usr/share/dict/words", random.randint(0, total_words - 1 )).rstrip('\n')
+        random_line = random.randint(0, total_words - 1)
+        selected_word = linecache.getline("/usr/share/dict/words", random_line).rstrip('\n')
         selected_words.append(selected_word)
 
     return selected_words
@@ -67,9 +68,7 @@ if __name__ == '__main__':
             setup = 'from dictionary_words import load_words, randomly_select;'
             print('It took:', end=' ')
             print(timeit.timeit(stmt='randomly_select(10, load_words("/usr/share/dict/words"))', setup=setup, number=100), end=" ")
-            print('seconds')
 
-            #Fast test
             print('Getting 10 random words the fast way:')
             setup = 'from dictionary_words import fast_select'
             print('It took:', end=' ')

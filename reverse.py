@@ -1,3 +1,6 @@
+'''
+    Module for reversing a stringß
+'''
 import sys
 
 def reverse(string):
