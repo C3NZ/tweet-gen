@@ -13,11 +13,7 @@ def load_words(word_file):
         Assumes word_list is a string that is the path to the file trying to be loaded
     '''
     file = open(word_file, 'r')
-    word_list = []
-
-    for line in file:
-        word_list.append(line)
-
+    word_list = file.readlines()
     return word_list
 
 def randomly_select(count, word_list):
