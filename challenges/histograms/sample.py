@@ -3,7 +3,7 @@ Module for Stochastic sampling from dictionary based histograms
 '''
 import random
 
-import distogram
+from . import distogram
 
 def random_sample(histogram):
     '''
@@ -15,19 +15,23 @@ def random_sample(histogram):
     random_index = random.randint(0, histogram_length - 1)
     return histogram_words[random_index]
 
-def weighted_sample(histogram):
+def weighted_sample(histogram, word_count=10):
     '''
         Randomly selects a word from a histogram, however, words are now weighted based on their frequency meaning that
         more frequent words have a higher probability of being returned.
-        Assumes that histogram is a dictionary based histogram.
+        Assumes that histogram is a dictionary based histogram and that word_count is the amount of words that you'd like to pull randomly
     '''
     word_list = []
     for word, frequency in histogram.items():
         for _ in range(0, frequency):
             word_list.append(word)
 
-    random_index = random.randint(0, len(word_list) - 1)
-    return word_list[random_index]
+    output_list = []
+
+    for _ in range(0, word_count):
+        random_index = random.randint(0, len(word_list) - 1)
+        output_list.append(word_list[random_index])
+    return output_list
 
 def test_sampling(histogram):
     '''
