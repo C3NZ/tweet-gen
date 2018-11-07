@@ -5,8 +5,8 @@ import os
 
 from flask import Flask
 
-from challenges.histograms.distogram import histogram
-from challenges.histograms import sample
+from lib.histograms.distogram import histogram
+from lib.histograms import sample
 
 app = Flask(__name__)
 
