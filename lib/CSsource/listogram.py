@@ -26,12 +26,14 @@ class Listogram(list):
             self.append((word, count))
         else:
             word_index = self._index(word)
-            print(word + ' '  + str(word_index))
+
             if word_index is None:
+                #The word couldn't be found, update the types and token count  
                 self.types += 1
                 self.tokens += count
                 self.append((word, count))
             else:
+                #retrieve the word freq and update the tuple/token count
                 word_freq = self[word_index][1]
                 self.tokens += count
                 self[word_index] = (word, word_freq + count)
