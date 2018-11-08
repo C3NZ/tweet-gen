@@ -19,21 +19,57 @@ class Listogram(list):
 
     def add_count(self, word, count=1):
         """Increase frequency count of given word by given count amount."""
-        # TODO: Increase word frequency by count
+        listogram_len = len(self)
+        if not listogram_len:
+            self.types += 1
+            self.tokens += count
+            self.append((word, count))
+        else:
+            word_index = self._index(word)
+            print(word + ' '  + str(word_index))
+            if word_index is None:
+                self.types += 1
+                self.tokens += count
+                self.append((word, count))
+            else:
+                word_freq = self[word_index][1]
+                self.tokens += count
+                self[word_index] = (word, word_freq + count)
 
     def frequency(self, word):
         """Return frequency count of given word, or 0 if word is not found."""
-        # TODO: Retrieve word frequency count
+        for word_count_list in self:
+            current_word = word_count_list[0]
+            word_freq = word_count_list[1]
+
+            if word == current_word:
+                return word_freq
+
+        return 0
 
     def __contains__(self, word):
         """Return boolean indicating if given word is in this histogram."""
-        # TODO: Check if word is in this histogram
+        for word_count_list in self:
+            current_word = word_count_list[0]
+            if word == current_word:
+                return True
+
+        return False
 
     def _index(self, target):
         """Return the index of entry containing given target word if found in
         this histogram, or None if target word is not found."""
-        # TODO: Implement linear search to find index of entry with target word
+        index = 0
 
+        for word_count_tup in self:
+            current_word = word_count_tup[0]
+
+            if target == current_word:
+                return index
+
+            index += 1
+
+        return None
 
 def print_histogram(word_list):
     print('word list: {}'.format(word_list))
