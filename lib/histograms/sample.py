@@ -21,7 +21,9 @@ def weighted_sample(histogram, word_count=10):
         more frequent words have a higher probability of being returned.
         Assumes that histogram is a dictionary based histogram and that word_count is the amount of words that you'd like to pull randomly
     '''
-    word_list = []
+    total_word_count = sum(histogram.keys())
+
+    
     for word, frequency in histogram.items():
         for _ in range(0, frequency):
             word_list.append(word)
