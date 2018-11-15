@@ -20,14 +20,13 @@ class Dictogram(dict):
     def add_count(self, word, count=1):
         """Increase frequency count of given word by given count amount."""
         # TODO: Increase word frequency by count
+        self.tokens += count
         try:
             current_freq = dict.__getitem__(self, word)
             dict.__setitem__(self, word, current_freq + count)
-            self.tokens += count
         except KeyError:
             dict.__setitem__(self, word, count)
             self.types += 1
-            self.tokens += count
 
     def frequency(self, word):
         """Return frequency count of given word, or 0 if word is not found."""

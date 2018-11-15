@@ -15,23 +15,21 @@ def random_sample(histogram):
     random_index = random.randint(0, histogram_length - 1)
     return histogram_words[random_index]
 
-def weighted_sample(histogram, word_count=10):
+def weighted_sample(histogram):
     '''
         Randomly selects a word from a histogram, however, words are now weighted based on their frequency meaning that
         more frequent words have a higher probability of being returned.
         Assumes that histogram is a dictionary based histogram and that word_count is the amount of words that you'd like to pull randomly
     '''
-    word_list = []
+    total_word_count = histogram.tokens
+    current_count = 0
+    destination_count = random.randint(0, total_word_count)
+
     for word, frequency in histogram.items():
-        for _ in range(0, frequency):
-            word_list.append(word)
-
-    output_list = []
-
-    for _ in range(0, word_count):
-        random_index = random.randint(0, len(word_list) - 1)
-        output_list.append(word_list[random_index])
-    return output_list
+        if current_count >= destination_count:
+            return word
+        else:
+            current_count += frequency
 
 def test_sampling(histogram):
     '''
