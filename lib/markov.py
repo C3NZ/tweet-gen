@@ -41,7 +41,7 @@ class Markov(dict):
         output_list.append(word)
         print(self[word])
         for i in range(0, sentence_length - 1):
-            word = weighted_sample(self[word])
+            word = markov_weighted_sample(self[word])
             output_list.append(word)
 
         return output_list
