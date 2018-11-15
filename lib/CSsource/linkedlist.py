@@ -80,7 +80,7 @@ class LinkedList(object):
         # TODO: Create new node to hold given item
         # TODO: Append node after tail, if it exists
         new_node = Node(item)
-        if self.head:
+        if self.is_empty():
             self.tail.next = new_node
             self.tail = new_node
         else:
@@ -93,7 +93,7 @@ class LinkedList(object):
         # TODO: Create new node to hold given item
         # TODO: Prepend node before head, if it exists
         new_node = Node(item)
-        if self.head:
+        if self.is_empty():
             new_node.next = self.head
             self.head = new_node
         else:
