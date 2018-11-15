@@ -24,12 +24,34 @@ def weighted_sample(histogram):
     total_word_count = histogram.tokens
     current_count = 0
     destination_count = random.randint(0, total_word_count)
-
+    print(histogram.values())
+    print(histogram.items())
+    print(histogram.keys())
     for word, frequency in histogram.items():
+        print(word)
+        print(frequency)
         if current_count >= destination_count:
             return word
         else:
             current_count += frequency
+
+def markov_weighted_sample(markov):
+    '''
+        Wrapper function for using the weighted_sample function with markov chains
+        Unwraps the markov chain, will only be called once when generating the first word
+        of a sentence
+        Assumes markov is of type Markov (see markov.py)
+    '''
+    total_word_count = markov.tokens
+    current_count = 0
+    destination_count = random.randint(0, total_word_count)
+
+    for word, dictogram in markov.items():
+        print(dictogram)
+        if current_count >= destination_count:
+            return word
+        else:
+            current_count += sum(dictogram.values())
 
 def test_sampling(histogram):
     '''
