@@ -51,7 +51,7 @@ def markov_weighted_sample(markov):
         if current_count >= destination_count:
             return word
         else:
-            current_count += sum(dictogram.values())
+            current_count += 
 
 def test_sampling(histogram):
     '''
