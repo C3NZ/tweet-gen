@@ -33,6 +33,9 @@ class LinkedList(object):
         """Return a string representation of this linked list."""
         return 'LinkedList({!r})'.format(self.items())
 
+    def __iter__(self):
+        return (node for node in self)
+
     def items(self):
         """Return a list (dynamic array) of all items in this linked list.
         Best and worst case running time: O(n) for n items in the list (length)
@@ -62,9 +65,8 @@ class LinkedList(object):
             return length
         else:
             current_node = self.head
-            length += 1
 
-            while current_node is not None:
+            while current_node:
                 length += 1
                 current_node = current_node.next
 
@@ -76,7 +78,7 @@ class LinkedList(object):
         # TODO: Create new node to hold given item
         # TODO: Append node after tail, if it exists
         new_node = Node(item)
-        if self.is_empty():
+        if not self.is_empty():
             self.tail.next = new_node
             self.tail = new_node
         else:
@@ -90,7 +92,7 @@ class LinkedList(object):
         # TODO: Prepend node before head, if it exists
         new_node = Node(item)
 
-        if self.is_empty():
+        if not self.is_empty():
             new_node.next = self.head
             self.head = new_node
         else:
@@ -113,7 +115,7 @@ class LinkedList(object):
                 else:
                     current_node = current_node.next
 
-            return current_node
+            return current_node.data
 
     def delete(self, item):
         """Delete the given item from this linked list, or raise ValueError.
