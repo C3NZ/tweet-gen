@@ -61,16 +61,12 @@ class LinkedList(object):
         if self.is_empty():
             return length
         else:
-            traversing = True
-            current_node = self.head 
+            current_node = self.head
             length += 1
 
-            while traversing:
-                if current_node.next == None:
-                    traversing = False
-                else:
-                    length += 1
-                    current_node = current_node.next
+            while current_node is not None:
+                length += 1
+                current_node = current_node.next
 
             return length
 
@@ -93,6 +89,7 @@ class LinkedList(object):
         # TODO: Create new node to hold given item
         # TODO: Prepend node before head, if it exists
         new_node = Node(item)
+
         if self.is_empty():
             new_node.next = self.head
             self.head = new_node
@@ -116,7 +113,7 @@ class LinkedList(object):
                 else:
                     current_node = current_node.next
 
-            return current_node.data
+            return current_node
 
     def delete(self, item):
         """Delete the given item from this linked list, or raise ValueError.
