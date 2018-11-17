@@ -19,6 +19,8 @@ class LinkedList(object):
         """Initialize this linked list and append the given items, if any."""
         self.head = None  # First node
         self.tail = None  # Last node
+        self.list_length = 0
+
         # Append given items
         if items is not None:
             for item in items:
@@ -78,12 +80,15 @@ class LinkedList(object):
         # TODO: Create new node to hold given item
         # TODO: Append node after tail, if it exists
         new_node = Node(item)
+
         if not self.is_empty():
             self.tail.next = new_node
             self.tail = new_node
         else:
             self.head = new_node
             self.tail = self.head
+
+        self.list_length += 1
 
     def prepend(self, item):
         """Insert the given item at the head of this linked list.
@@ -98,6 +103,8 @@ class LinkedList(object):
         else:
             self.head = new_node
             self.tail = self.head
+
+        self.list_length += 1
 
     def find(self, quality):
         """Return an item from this linked list satisfying the given quality.
@@ -148,6 +155,7 @@ class LinkedList(object):
                             self.head = current_node.next
 
                     traversing = False
+                    self.list_length -= 1
                 else:
                     if current_node.next is None:
                         raise ValueError('Item not found: {}'.format(item))
