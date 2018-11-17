@@ -1,6 +1,7 @@
 '''
-    Application for hosting our histogram
+    Web Application for hosting our histogram and the main entry point into our app
 '''
+
 import os
 
 from flask import Flask
