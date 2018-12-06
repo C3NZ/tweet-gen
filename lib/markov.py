@@ -14,16 +14,17 @@ class Markov(dict):
     def create_markov(self, word_list):
         list_len = len(word_list)
         for i in range(0, list_len):
-            if i + 1 < list_len:
-                current_type = word_list[i]
-                next_type = word_list[i + 1]
+            if i + 2 < list_len:
+                current_type = (word_list[i], word_list[i + 1])
+                next_type = word_list[i + 2]
                 self.add_word(current_type, next_type)
-
 
     def add_word(self, current_type, next_type):
         if self.empty:
             self.empty = False
-            self.types += 2
+            if current_type[0] == current_type[1]:
+                self.types += 1
+            self.types += 3
             self.tokens += 2
             self[current_type] = Dictogram([next_type])
         else:
@@ -45,7 +46,7 @@ class Markov(dict):
             output_list.append(word)
 
         return output_list
-
+    
     def get_tokens(self):
         return self.tokens
 
