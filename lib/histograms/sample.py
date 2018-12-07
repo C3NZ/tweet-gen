@@ -26,7 +26,6 @@ def weighted_sample(histogram):
     destination_count = random.randint(1, total_word_count)
     for word, frequency in histogram.items():
         if current_count >= destination_count:
-            print(word)
             return word
         else:
             current_count += frequency
