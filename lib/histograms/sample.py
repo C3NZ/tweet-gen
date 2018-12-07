@@ -22,15 +22,11 @@ def weighted_sample(histogram):
         Assumes that histogram is a dictionary based histogram and that word_count is the amount of words that you'd like to pull randomly
     '''
     total_word_count = histogram.tokens
-    current_count = 0
-    destination_count = random.randint(0, total_word_count)
-    print(histogram.values())
-    print(histogram.items())
-    print(histogram.keys())
+    current_count = 1
+    destination_count = random.randint(1, total_word_count)
     for word, frequency in histogram.items():
-        print(word)
-        print(frequency)
         if current_count >= destination_count:
+            print(word)
             return word
         else:
             current_count += frequency
@@ -42,16 +38,14 @@ def markov_weighted_sample(markov):
         of a sentence
         Assumes markov is of type Markov (see markov.py)
     '''
-    total_word_count = markov.tokens
-    current_count = 0
-    destination_count = random.randint(0, total_word_count)
-
-    for word, dictogram in markov.items():
-        print(dictogram)
+    total_token_count = markov.tokens
+    current_count = 1
+    destination_count = random.randint(1, total_token_count)
+    for word_type, dictogram in markov.items():
         if current_count >= destination_count:
-            return word
+            return word_type
         else:
-            current_count +=  
+            current_count += dictogram.tokens 
 
 def test_sampling(histogram):
     '''
