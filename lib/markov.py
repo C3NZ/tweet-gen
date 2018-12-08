@@ -5,14 +5,14 @@ from histograms.sample import weighted_sample, markov_weighted_sample
 import random
 
 class Markov(dict):
-    def __init__(self, word_list=[], order=1):
-        super(Markov, self).__init__();
+    def __init__(self, word_list=None, order=2):
+        super(Markov, self).__init__()
         self.types = 0
         self.tokens = 0
         self.empty = True
-        self.queue = Queue()
         self.order = order
-        if len(word_list):
+
+        if word_list is None:
             self.create_markov(word_list)
 
     def create_markov(self, word_list):
@@ -22,16 +22,15 @@ class Markov(dict):
         '''
         list_len = len(word_list)
 
-        for i in range(0, list_len):
-            if i + 1 + self.order < list_len or i + 1 + self.order == list_len:
+        for i in range(0, list_len - self.order):
+            if i  + self.order < list_len:
                 current_type = tuple(word for word in word_list[i: i + self.order])
-                next_type = tuple(word for word in word_list[i + 1: i + 1 + self.order])
-                self.queue.enqueue_multiple([current_type, next_type])
+                next_type = word_list[i + self.order]
                 self.add_token(current_type, next_type)
 
     def add_token(self, current_type, next_type):
         '''
-            Add tokens into our markov chain 
+            Add tokens into our markov chain regardless of the order
         ''' 
         if self.empty:
             self.empty = False
@@ -48,16 +47,31 @@ class Markov(dict):
             self.tokens += 1
 
     def generate_sentence(self, sentence_length=10):
+        '''
+            Generate a sentence given the current state of the markov chain
+            Assumes that sentence_length is an integer the length of the sentence
+            you want.
+            Returns a list of strings
+        '''
         output_list = []
         random_type = markov_weighted_sample(self)
+        next_words = list(random_type[1:])
         output_list.append(" ".join(random_type))
+
         for i in range(0, sentence_length - 1):
             dictogram = self[random_type]
-            random_type = weighted_sample(dictogram)
+            next_word = weighted_sample(dictogram)
+            if next_word == None:
+                next_word = '.'
+            output_list.append(next_word)
+
+            next_words.append(next_word)
+            random_type = tuple(next_words)
 
             if random_type not in self:
                 random_type = markov_weighted_sample(self)
-            output_list.append(random_type[self.order - 1])
+
+            next_words = next_words[1:]
 
         return output_list
 
