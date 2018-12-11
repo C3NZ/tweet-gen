@@ -44,7 +44,7 @@ def markov_weighted_sample(markov):
         if current_count >= destination_count:
             return word_type
         else:
-            current_count += dictogram.tokens 
+            current_count += dictogram.tokens
 
 def test_sampling(histogram):
     '''
