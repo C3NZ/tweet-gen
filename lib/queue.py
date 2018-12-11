@@ -26,13 +26,15 @@ class Queue(LinkedList):
         '''
         return self.delete(self.head.data)
 
-    def iterate(self):
+    def iterate(self, times=1):
         '''
             iterate through all items of the queue and remove them in order.
             yields a single item per iteration
         '''
-        while not self.is_empty():
-            yield self.dequeue()
+        output_list = []
+        for i in range(0, times):
+            output_list.append(self.delete(self.head.data))
+        return output_list
 
 def test_queue():
     items = ['a', 'b', 'c', 'd', 'e']

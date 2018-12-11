@@ -1,31 +1,49 @@
-from CSsource.dictogram import Dictogram
 from queue import Queue
-from utils.file import extract_words
+from CSsource.dictogram import Dictogram
+from utils.file import extract_words, serialize_markov, deserialize_markov
 from histograms.sample import weighted_sample, markov_weighted_sample
+
 import random
 
 class Markov(dict):
-    def __init__(self, word_list=None, order=2):
+    def __init__(self, word_queue=None, order=3):
         super(Markov, self).__init__()
         self.types = 0
         self.tokens = 0
         self.empty = True
         self.order = order
 
-        if word_list is None:
-            self.create_markov(word_list)
+        if word_queue is not None:
+            self.create_markov(word_queue)
 
-    def create_markov(self, word_list):
+    def save_markov(self, path_to_file):
+        '''
+            Save the markov chain to a file
+            assumes that path_to_file is a string containing the file to save
+        '''
+        serialize_markov(path_to_file, self)
+
+    def load_markov(self, path_to_file):
+        '''
+            Load the markov chain from a file
+            assumes that path_to_file is a string containing the file to save
+        '''
+        self = deserialize_markov(path_to_file)
+
+    def create_markov(self, word_queue):
         '''
             create the markov chain model/data structure
-            assumes word_list is a list of words
+            assumes word_queue is a queue containing your corpus
         '''
-        list_len = len(word_list)
+        list_len = word_queue.list_length
+        context = word_queue.iterate(self.order)
 
         for i in range(0, list_len - self.order):
-            if i  + self.order < list_len:
-                current_type = tuple(word for word in word_list[i: i + self.order])
-                next_type = word_list[i + self.order]
+            if i + self.order < list_len:
+                current_type = tuple(context)
+                next_type = word_queue.dequeue()
+                context.pop(0) 
+                context.append(next_type)
                 self.add_token(current_type, next_type)
 
     def add_token(self, current_type, next_type):
@@ -35,7 +53,6 @@ class Markov(dict):
         if self.empty:
             self.empty = False
             self[current_type] = Dictogram([next_type])
-            self.tokens += 1
             self.types += 1
         else:
             if current_type in self:
@@ -44,9 +61,9 @@ class Markov(dict):
                 self.types += 1
                 self[current_type] = Dictogram([next_type])
 
-            self.tokens += 1
+        self.tokens += 1
 
-    def generate_sentence(self, sentence_length=10):
+    def generate_sentence(self, sentence_length=100):
         '''
             Generate a sentence given the current state of the markov chain
             Assumes that sentence_length is an integer the length of the sentence
@@ -58,11 +75,9 @@ class Markov(dict):
         next_words = list(random_type[1:])
         output_list.append(" ".join(random_type))
 
-        for i in range(0, sentence_length - 1):
+        for i in range(0, sentence_length):
             dictogram = self[random_type]
             next_word = weighted_sample(dictogram)
-            if next_word == None:
-                next_word = '.'
             output_list.append(next_word)
 
             next_words.append(next_word)
@@ -75,23 +90,12 @@ class Markov(dict):
 
         return output_list
 
-    def get_tokens(self):
-        return self.tokens
-
-    def get_types(self):
-        return self.types
-
-
-
 def main():
-    word_list = ['hi', 'hi', 'hi', 'bye', 'bye', 'bye', 'bye', 'hello', 'there', 'is', 'tokens', 'and', 'words']
-    print(word_list)
-    markov = Markov(word_list)
+    word_queue = Queue()
+    extract_words('corpus/corpus.txt', word_queue)
+    markov = Markov(word_queue)
     sentence = markov.generate_sentence()
     print(" ".join(sentence))
-    for key, value in markov.items():
-        print(key)
-        print(value)
     print(markov.tokens)
     print(markov.types)
 
