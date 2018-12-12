@@ -38,6 +38,14 @@ def clean_words(path_to_file, output_file):
 
     return new_str
 
+def extract_json(path_to_file):
+    '''
+        Extract json from a file into a list containing python dictionary objects
+        Returns a list of python dictionary objects
+    '''
+    with open(path_to_file, 'r') as current_file:
+        return json.load(current_file)
+
 def serialize_markov(path_to_file, markov):
     '''
         Serialize the markov to be written to file in a format we can later retrieve
@@ -67,5 +75,4 @@ if __name__ == '__main__':
     lel[('hi,', 'helloo')] = 4
     serialize_markov('x.txt', lel);
     lel = deserialize_markov('x.txt', {})
-    # y = extract_words('corpus/corpus.txt')
-    x = clean_words('corpus/corpus.txt', 'clean.txt') 
+    print(extract_json('reddit_jokes.json'))
