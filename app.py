@@ -4,12 +4,12 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 
 from lib.histograms.distogram import histogram
 from lib.histograms import sample
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 def create_histogram():
     '''
@@ -17,7 +17,7 @@ def create_histogram():
     '''
     return histogram('moby.txt')
 
-distogram = create_histogram()
+# distogram = create_histogram()
 
 def generate_text(histogram, word_count=10):
     '''
@@ -28,7 +28,7 @@ def generate_text(histogram, word_count=10):
 
 @app.route('/')
 def hello_world():
-    return generate_text(distogram)
+    return render_template('index.html', data='hi')
 
 if __name__ == '__main__':
     port = os.getenv('PORT', 5000)
