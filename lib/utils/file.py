@@ -55,7 +55,7 @@ def serialize_markov(path_to_file, markov):
     with open(path_to_file, 'wb') as current_file:
         pickle.dump(markov, current_file)
 
-def deserialize_markov(path_to_file, markov):
+def deserialize_markov(path_to_file):
     '''
         Deserialize the markov object that is stored in a file
         Assumes that path_to_file is a string that contains the path to the output file

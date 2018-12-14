@@ -1,12 +1,12 @@
 from queue import Queue
-from CSsource.dictogram import Dictogram
-from utils.file import extract_words, serialize_markov, deserialize_markov
-from histograms.sample import weighted_sample, markov_weighted_sample
+from lib.CSsource.dictogram import Dictogram
+from lib.utils.file import extract_words, serialize_markov, deserialize_markov
+from lib.histograms.sample import weighted_sample, markov_weighted_sample
 
 import random
 
 class Markov(dict):
-    def __init__(self, word_queue=None, order=3):
+    def __init__(self, word_queue=None, order=2):
         super(Markov, self).__init__()
         self.types = 0
         self.tokens = 0
@@ -23,12 +23,13 @@ class Markov(dict):
         '''
         serialize_markov(path_to_file, self)
 
-    def load_markov(self, path_to_file):
+    @staticmethod
+    def load_markov(path_to_file):
         '''
             Load the markov chain from a file
             assumes that path_to_file is a string containing the file to save
         '''
-        self = deserialize_markov(path_to_file)
+        return deserialize_markov(path_to_file)
 
     def create_markov(self, word_queue):
         '''
@@ -36,15 +37,31 @@ class Markov(dict):
             assumes word_queue is a queue containing your corpus
         '''
         list_len = word_queue.list_length
-        context = word_queue.iterate(self.order)
-
-        for i in range(0, list_len - self.order):
-            if i + self.order < list_len:
-                current_type = tuple(context)
+        context = word_queue.iterate(self.order + 1)
+        context = context[1:]
+        counter = self.order + 1
+        words_left = True
+        
+        while words_left:
+            if counter < list_len:
                 next_type = word_queue.dequeue()
-                context.pop(0) 
+                # Check if the next type is stop so we can get the value that comes after it 
+                if next_type == 'STOP':
+                    counter += 2
+                    if counter < list_len: 
+                        word_queue.dequeue()
+                        next_type = word_queue.dequeue()
+                    else:
+                        words_left = False
+
+                counter += 1
+
+                current_type = tuple(context)
+                context.pop(0)
                 context.append(next_type)
                 self.add_token(current_type, next_type)
+            else:
+                words_left = False
 
     def add_token(self, current_type, next_type):
         '''
@@ -73,18 +90,35 @@ class Markov(dict):
         output_list = []
         random_type = markov_weighted_sample(self)
         next_words = list(random_type[1:])
-        output_list.append(" ".join(random_type))
+        output_list.extend(word for word in random_type)
+        counter = self.order
 
-        for i in range(0, sentence_length):
+        sentence_ended = False
+
+        while not sentence_ended:
             dictogram = self[random_type]
+
             next_word = weighted_sample(dictogram)
+
+            if next_word != 'STOP':
+                next_words.append(next_word)
+                counter += 1
+            else:
+                random_type = markov_weighted_sample(self)
+                next_words = list(random_type[1:])
+                output_list.extend(word for word in random_type)
+                counter += self.order
+                continue
+            print(random_type)
+            print(dictogram)
+            print(next_word)
             output_list.append(next_word)
 
-            next_words.append(next_word)
-            random_type = tuple(next_words)
+            if next_word[-1] in '.?':
+                if counter >= sentence_length:
+                    sentence_ended = True
 
-            if random_type not in self:
-                random_type = markov_weighted_sample(self)
+            random_type = tuple(next_words)
 
             next_words = next_words[1:]
 

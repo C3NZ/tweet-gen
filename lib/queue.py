@@ -1,4 +1,4 @@
-from CSsource.linkedlist import LinkedList
+from lib.CSsource.linkedlist import LinkedList
 
 class Queue(LinkedList):
     def __init__(self, items=None):
