@@ -17,7 +17,7 @@ app = Flask(__name__, template_folder='templates')
 # All code for generating a markov chain.
 # Will keep commented for now unless I have to create a new markov for loading
 def create_markovs():
-    app.word_queues = get_word_queues(15000)
+    app.word_queues = get_word_queues(10000)
     app.joke_markov = Markov(app.word_queues[0], order=4)
     app.punchline_markov = Markov(app.word_queues[1], order=4)
     app.joke_markov.save_markov('res/joke_markov')
